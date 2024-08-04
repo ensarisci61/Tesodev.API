@@ -1,0 +1,31 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/Tesodev.API",
+      "UpstreamHttpMethod": [ "Get", "Put", "Post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tesodev.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tesodev.API"
+    },
+    {
+
+
+      "UpstreamPathTemplate": "/api/Tesodev.API/{id}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tesodev.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Tesodev.API/{id}"
+    }
+  ],
+  "GlobalConfiguration": {}
+}

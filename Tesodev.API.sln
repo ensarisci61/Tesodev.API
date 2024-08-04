@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tesodev.API", "Tesodev.API\Tesodev.API.csproj", "{D1EA8666-6FF9-40A4-8504-3CBFD581DD39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tesodev.Shared", "Tesodev.Shared\Tesodev.Shared.csproj", "{8268A833-8483-4672-A356-36778CDD137D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{360FC0B0-31B8-400D-A8EA-6800216918B9}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BB355F75-170D-4443-9330-167776D9D506}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1EA8666-6FF9-40A4-8504-3CBFD581DD39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1EA8666-6FF9-40A4-8504-3CBFD581DD39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1EA8666-6FF9-40A4-8504-3CBFD581DD39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1EA8666-6FF9-40A4-8504-3CBFD581DD39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8268A833-8483-4672-A356-36778CDD137D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8268A833-8483-4672-A356-36778CDD137D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8268A833-8483-4672-A356-36778CDD137D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8268A833-8483-4672-A356-36778CDD137D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{360FC0B0-31B8-400D-A8EA-6800216918B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{360FC0B0-31B8-400D-A8EA-6800216918B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{360FC0B0-31B8-400D-A8EA-6800216918B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{360FC0B0-31B8-400D-A8EA-6800216918B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB355F75-170D-4443-9330-167776D9D506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB355F75-170D-4443-9330-167776D9D506}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB355F75-170D-4443-9330-167776D9D506}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB355F75-170D-4443-9330-167776D9D506}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4B3E86C-4B1D-4C99-A385-A939742D5ED0}
+	EndGlobalSection
+EndGlobal
