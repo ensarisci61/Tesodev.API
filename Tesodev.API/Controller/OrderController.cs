@@ -87,5 +87,21 @@ namespace Tesodev.API.Controller
 				throw;
 			}
 		}
+
+		[HttpPut("id")]
+		[ProducesResponseType(500)]
+		public async Task<ActionResult<OrderDto>> UpdateOrder([FromQuery] string id, UpdateOrderDto order)
+		{
+			try
+			{
+				var result = await _orderService.UpdateOrderId(id,order);
+				return Ok(result);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+		}
 	}
 }

@@ -5,6 +5,9 @@ using Tesodev.Shared.Data.Dto;
 using Tesodev.Shared.Data.Enum;
 using Tesodev.Shared.Data.Extensions;
 using System.Net.Mail;
+using MongoDB.Bson;
+using RabbitMQ.Client;
+using System.Text;
 
 namespace Tesodev.Shared.Data.Service.OrderService
 {
@@ -14,9 +17,14 @@ namespace Tesodev.Shared.Data.Service.OrderService
 		Task<string> DeleteOrder(string id);
 		Task<List<OrderDto>> GetOrder();
 		Task<OrderDto> GetOrderById(string id);
+		Task<string> UpdateOrderId(string id, UpdateOrderDto updateFields);
 	}
 	public class OrderService : IOrderService
 	{
+
+		private const string HostName = "localhost";
+		private const string QueueName = "orderLogQueue";
+
 		public async Task<Order> AddOrder(OrderAddDto orderAdd, string customerName, string productName)
 		{
 			var db = DBConnectionExtension.MongoDBConnection();
@@ -62,7 +70,8 @@ namespace Tesodev.Shared.Data.Service.OrderService
 				await dbOrder.InsertOneAsync(response);
 				SendMailOrder(response.ToString());
 			}
-
+			var log = "Sipariş oluşturuldu. Sipariş Detayları : " + response.ToJson();
+			PublishOrderLog(log);
 			return response;
 		}
 
@@ -70,18 +79,20 @@ namespace Tesodev.Shared.Data.Service.OrderService
 		{
 			var db = DBConnectionExtension.MongoDBConnection().GetCollection<Order>("Orders");
 			await db.DeleteOneAsync(x => x.Id.ToString() == id);
+
+			var log = id + "numaralı siparişiniz silinmiştir.";
+			PublishOrderLog(log);
 			return HttpStatusCode.Accepted.ToString();
 		}
 
 		public async Task<List<OrderDto>> GetOrder()
 		{
-			var db = DBConnectionExtension.MongoDBConnection();
-			var dbOrder = db.GetCollection<Order>("Orders");
+			var db = DBConnectionExtension.MongoDBConnection().GetCollection<Order>("Orders");
 			var listOrder = new List<OrderDto>();
 
-			var cus = await dbOrder.Find(x => true).ToListAsync();
+			var cus = await db.Find(x => true).ToListAsync();
 
-			if (dbOrder != null)
+			if (db != null)
 			{
 				foreach (var order in cus)
 				{
@@ -108,16 +119,33 @@ namespace Tesodev.Shared.Data.Service.OrderService
 
 		public async Task<OrderDto> GetOrderById(string id)
 		{
-			var db = DBConnectionExtension.MongoDBConnection().GetCollection<Order>("Product");
+			var db = DBConnectionExtension.MongoDBConnection().GetCollection<Order>("Order");
 			var order = JsonConvert.DeserializeObject<OrderDto>(JsonConvert.SerializeObject(db.Find(x => x.Id.ToString() == id).ToListAsync()));
 
 			return order;
 		}
 
+		public async Task<string> UpdateOrderId(string id, UpdateOrderDto updateFields)
+		{
+			var db = DBConnectionExtension.MongoDBConnection().GetCollection<Order>("Order");
+
+			var filter = Builders<Order>.Filter.Eq("_id", new ObjectId(id));
+			var update = Builders<Order>.Update.Set("Order", updateFields);
+
+			var result = await db.UpdateOneAsync(filter, update);
+
+			if (result.ModifiedCount > 0)
+				return HttpStatusCode.Accepted.ToString();
+
+			var log = id + "numaralı sipariş güncellenmiştir.";
+			PublishOrderLog(log);
+			return HttpStatusCode.BadRequest.ToString();
+		}
+
 		public void SendMailOrder(string? response)
 		{
 			var ePosta = new MailMessage();
-			ePosta.From = new MailAddress("send@omercebi.com");
+			ePosta.From = new MailAddress("denememail6154@gmail.com");
 			ePosta.Subject = "Order Information";
 			ePosta.Body = response;
 
@@ -129,6 +157,26 @@ namespace Tesodev.Shared.Data.Service.OrderService
 
 			smtp.SendAsync(ePosta, (object)ePosta);
 			smtp.Send(ePosta);
+		}
+
+		public void PublishOrderLog(string orderLog)
+		{
+			var factory = new ConnectionFactory() { HostName = HostName };
+			using var connection = factory.CreateConnection();
+			using var channel = connection.CreateModel();
+
+			channel.QueueDeclare(queue: QueueName,
+				durable: false,
+				exclusive: false,
+				autoDelete: false,
+				arguments: null);
+
+			var body = Encoding.UTF8.GetBytes(orderLog);
+
+			channel.BasicPublish(exchange: "",
+				routingKey: QueueName,
+				basicProperties: null,
+				body: body);
 		}
 	}
 }
