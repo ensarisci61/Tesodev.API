@@ -1,5 +1,7 @@
 version: '3.4'
 
+ 
+
 services:
   apigateway:
     container_name : api-gateway
@@ -11,3 +13,19 @@ services:
       - 8001:80 
     networks:
       - backend
+    environment:
+      - DB_HOST=localhost
+      - DB_NAME=Tesodev
+
+  tesodev:
+    container_name: Tesodev
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - backend
+
+
+networks:
+  beckend:
+    driver: bridge
