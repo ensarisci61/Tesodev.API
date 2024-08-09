@@ -86,5 +86,22 @@ namespace Tesodev.API.Controller
 				throw;
 			}
 		}
+
+		[HttpPut("id")]
+		[ProducesResponseType(500)]
+		public async Task<ActionResult<CustomerDto>> UpdateCustomer(string id, UpdateCustomerDto dto)
+		{
+			var trackingId = Guid.NewGuid().ToString();
+			try
+			{
+				var result = await _customerService.UpdateCustomer(id,dto);
+				return Ok(result);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+		}
 	}
 }

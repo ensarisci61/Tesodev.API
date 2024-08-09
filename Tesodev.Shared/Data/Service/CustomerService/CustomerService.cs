@@ -14,6 +14,7 @@ namespace Tesodev.Shared.Data.Service.CustomerService
 		Task<string> DeleteCustomer(string id);
 		Task<List<CustomerDto>> GetCustomerList();
 		Task<CustomerDto> GetCustomer(string id);
+		Task<string> UpdateCustomer(string id, UpdateCustomerDto updateFields);
 	}
 	public class CustomerService : ICustomerService
 	{
@@ -79,6 +80,19 @@ namespace Tesodev.Shared.Data.Service.CustomerService
 			var cust = JsonConvert.DeserializeObject<CustomerDto>(JsonConvert.SerializeObject(dbCustomer.Find(x => x.Id.ToString() == id).ToListAsync()));
 
 			return cust;
+		}
+
+		public async Task<string> UpdateCustomer(string id, UpdateCustomerDto updateFields)
+		{
+			var db = DBConnectionExtension.MongoDBConnection().GetCollection<Customer>("Customer");
+			var filter = Builders<Customer>.Filter.Eq("_id", new ObjectId(id));
+			var update = Builders<Customer>.Update.Set("Order", updateFields);
+
+			var result = await db.UpdateOneAsync(filter, update);
+
+			if (result.ModifiedCount > 0)
+				return HttpStatusCode.Accepted.ToString();
+			return HttpStatusCode.BadRequest.ToString();
 		}
 	}
 }
